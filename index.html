@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เที่ยวตรัง - มนต์เสน่ห์แห่งอันดามัน | Trang Travel</title>
+    
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    },
+                    colors: {
+                        trang: {
+                            light: '#e0f2fe',   /* Sky 100 */
+                            DEFAULT: '#0284c7', /* Sky 600 */
+                            dark: '#0369a1',    /* Sky 700 */
+                            accent: '#38bdf8'   /* Sky 400 */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .hero-bg {
+            background-image: linear-gradient(rgba(2, 132, 199, 0.7), rgba(3, 105, 161, 0.85)), url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=2039&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        .tour-card { transition: all 0.3s ease; }
+        .tour-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.15), 0 8px 10px -6px rgba(2, 132, 199, 0.1);
+        }
+        .tour-card img { transition: all 0.5s ease; }
+        .tour-card:hover img { transform: scale(1.05); }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating { animation: float 3s ease-in-out infinite; }
+
+        /* Custom text highlight glow */
+        .text-glow {
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+        
+        /* Hide scrollbar for nav but keep functionality */
+        .nav-scroller::-webkit-scrollbar {
+            display: none;
+        }
+        .nav-scroller {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased overflow-x-hidden">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-md" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="fa-solid fa-water text-trang text-3xl mr-2"></i>
+                    <span class="font-bold text-2xl text-trang-dark tracking-wide">TRANG<span class="text-trang-accent">.</span></span>
+                </div>
+                
+                <!-- Desktop Menu (Scrollable if too long on smaller screens) -->
+                <div class="hidden xl:flex space-x-6 items-center nav-scroller overflow-x-auto whitespace-nowrap">
+                    <a href="#about" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">ข้อมูลทั่วไป</a>
+                    <a href="#islands" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">เกาะและทะเล</a>
+                    <a href="#landmarks" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">จุดเช็คอิน</a>
+                    <a href="#food" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">อาหารท้องถิ่น</a>
+                    <a href="#cafe" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">คาเฟ่</a>
+                    <a href="#culture" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">ประเพณี</a>
+                    <a href="#souvenir" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">ของฝาก</a>
+                    <a href="#transport" class="bg-trang text-white px-5 py-2 rounded-full font-medium hover:bg-trang-dark transition-colors shadow-lg shadow-blue-500/30 text-sm">การเดินทาง</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="xl:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-trang focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden xl:hidden bg-white border-t border-gray-100 absolute w-full shadow-xl max-h-[80vh] overflow-y-auto">
+            <div class="px-4 pt-2 pb-6 space-y-1 flex flex-col">
+                <a href="#about" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-circle-info w-6 text-center text-trang"></i> ข้อมูลทั่วไป</a>
+                <a href="#islands" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-umbrella-beach w-6 text-center text-trang"></i> ทะเลและหมู่เกาะ</a>
+                <a href="#landmarks" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-map-location-dot w-6 text-center text-trang"></i> จุดเช็คอินบนฝั่ง</a>
+                <a href="#food" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-bowl-food w-6 text-center text-trang"></i> อาหารท้องถิ่น</a>
+                <a href="#cafe" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-mug-hot w-6 text-center text-trang"></i> คาเฟ่น่านั่ง</a>
+                <a href="#culture" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-hands-praying w-6 text-center text-trang"></i> เทศกาลประเพณี</a>
+                <a href="#souvenir" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-gift w-6 text-center text-trang"></i> ของฝาก</a>
+                <a href="#transport" class="mobile-link block px-3 py-3 text-base font-medium text-gray-700 hover:text-trang hover:bg-trang-light rounded-md"><i class="fa-solid fa-plane-departure w-6 text-center text-trang"></i> การเดินทาง</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen hero-bg flex items-center justify-center text-center px-4" id="home">
+        <div class="z-10 text-white max-w-4xl mx-auto reveal">
+            <h2 class="text-trang-accent font-medium text-xl md:text-2xl mb-4 tracking-widest uppercase drop-shadow-md">ยุทธจักรความอร่อย เสน่ห์อันดามัน</h2>
+            
+            <!-- ปรับแต่งส่วนที่ไฮไลต์ตามที่ผู้ใช้ต้องการ -->
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
+                <span class="text-white">ค้นพบความมหัศจรรย์</span><br>
+                <span class="text-white">ที่</span> 
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-trang-accent to-blue-200 text-glow">จังหวัดตรัง</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light drop-shadow-md">
+                สัมผัสธรรมชาติที่สมบูรณ์ ชายหาดเงียบสงบ เกาะสวยน้ำใส และลิ้มรสอาหารพื้นเมืองที่เป็นเอกลักษณ์ ไม่ว่าจะเป็นหมูย่างหรือติ่มซำยามเช้า
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#about" class="bg-gradient-to-r from-trang-accent to-trang text-white px-8 py-4 rounded-full font-bold text-lg hover:from-trang hover:to-trang-dark transition-all transform hover:-translate-y-1 shadow-lg shadow-blue-500/50 floating border border-white/20">
+                    เริ่มสำรวจเลย
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
+            <i class="fa-solid fa-chevron-down text-white text-3xl opacity-80 hover:opacity-100 transition-opacity drop-shadow-md"></i>
+        </div>
+    </header>
+
+    <!-- 1. About Section -->
+    <section id="about" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b6/LaoLiangPhi.jpg" alt="วิถีชีวิตชาวตรัง" class="w-full h-[500px] object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-trang-dark/80 to-transparent flex items-end p-8">
+                            <h3 class="text-white text-2xl font-bold">"เมืองพระยารัษฎา ชาวประชาใจกว้าง..."</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal delay-200">
+                    <div class="inline-block px-4 py-1 rounded-full bg-trang-light text-trang font-semibold text-sm mb-4">
+                        <i class="fa-solid fa-book-open mr-2"></i>ข้อมูลทั่วไป
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">ทำความรู้จัก "เมืองตรัง"</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed text-lg">
+                        จังหวัดตรัง เป็นจังหวัดชายฝั่งทะเลอันดามันที่มีความอุดมสมบูรณ์ทั้งทางธรรมชาติและวัฒนธรรม มีชายฝั่งยาวถึง 119 กิโลเมตร เต็มไปด้วยหมู่เกาะสวยงามกว่า 46 เกาะ 
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed text-lg">
+                        นอกจากความงามทางทะเลแล้ว ตรังยังได้ชื่อว่าเป็น <b>"เมืองแห่งของกิน"</b> ที่ผสมผสานวัฒนธรรมไทย-จีน ได้อย่างลงตัว เที่ยวได้ตลอดปีและมีกิจกรรมหลากหลายรอให้คุณมาสัมผัส
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                            <div class="w-12 h-12 rounded-full bg-trang-light flex items-center justify-center text-trang flex-shrink-0">
+                                <i class="fa-solid fa-map text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">พื้นที่</h4>
+                                <p class="text-sm text-gray-500">4,917 ตร.กม.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                            <div class="w-12 h-12 rounded-full bg-trang-light flex items-center justify-center text-trang flex-shrink-0">
+                                <i class="fa-solid fa-cloud-sun text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">ฤดูกาล</h4>
+                                <p class="text-sm text-gray-500">เที่ยวได้ตลอดปี (ทะเลสวย พ.ย.-พ.ค.)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Islands & Beaches -->
+    <section id="islands" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <span class="text-trang font-semibold tracking-wider uppercase text-sm">Islands & Beaches</span>
+                <h2 class="text-4xl font-bold text-gray-900 mt-2 mb-4">ทะเลและหมู่เกาะสุดปัง</h2>
+                <p class="text-gray-600 text-lg">สวรรค์แห่งอันดามัน น้ำใส ทรายขาว ปะการังสมบูรณ์</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Island 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden tour-card reveal shadow-sm border border-gray-100">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://s359.kapook.com/pagebuilder/cb15918f-cca7-4862-b358-c06a19666e95.jpg" alt="เกาะกระดาน" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full text-sm font-bold text-trang shadow-md">
+                            อันดับ 1 ของโลก
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">เกาะกระดาน</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            ชายหาดที่ดีที่สุดในโลกประจำปี 2023! หาดทรายขาวละเอียดเหมือนแป้ง น้ำทะเลใสจนเห็นแนวปะการังน้ำตื้น และเป็นสถานที่จัดงานวิวาห์ใต้สมุทร
+                        </p>
+                        <a href="https://www.google.com/search?q=เกาะกระดาน+จังหวัดตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Island 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden tour-card reveal delay-100 shadow-sm border border-gray-100">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdL56Io-RLtLBdCnql2BX7ZEH294Tn29sJaw&s" alt="ถ้ำมรกต" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">ถ้ำมรกต (เกาะมุก)</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Unseen Thailand ที่ต้องลอยตัวเข้าถ้ำมืดมิด เพื่อทะลุออกไปยังหาดทรายขาวที่ซ่อนอยู่ภายในหุบเขา แสงแดดสะท้อนน้ำเป็นสีเขียวมรกตงดงาม
+                        </p>
+                        <a href="https://www.google.com/search?q=ถ้ำมรกต+เกาะมุก+ตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Island 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden tour-card reveal delay-200 shadow-sm border border-gray-100">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLKtaWyr2B2Q67q_kgfP_gurEwiI_YhU2soA&s" alt="เกาะรอก" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">เกาะรอก</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            "ราชินีแห่งอันดามัน" โดดเด่นด้วยน้ำทะเลสีฟ้าใสแจ๋วและปะการังที่อุดมสมบูรณ์มาก เหมาะสำหรับการดำน้ำตื้นดูปลาการ์ตูน
+                        </p>
+                        <a href="https://www.google.com/search?q=เกาะรอก+ตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Landmarks (On land) -->
+    <section id="landmarks" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <span class="text-trang font-semibold tracking-wider uppercase text-sm">City Landmarks</span>
+                <h2 class="text-4xl font-bold text-gray-900 mt-2 mb-4">จุดเช็คอินบนฝั่ง</h2>
+                <p class="text-gray-600 text-lg">ถ่ายรูปสวยๆ กับสถาปัตยกรรมและธรรมชาติในเมือง</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex flex-col sm:flex-row bg-gray-50 rounded-2xl overflow-hidden tour-card reveal shadow-sm border border-gray-100">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS92C21klLmLn0pFnzDtOXDtgvIJ_RvSsoLbg&s" alt="สถานีรถไฟกันตัง" class="sm:w-2/5 h-48 sm:h-auto object-cover">
+                    <div class="sm:w-3/5 p-6 flex flex-col justify-center">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">สถานีรถไฟกันตัง</h3>
+                        <p class="text-gray-600 text-sm mb-2">สถานีสุดทางฝั่งอันดามัน อาคารไม้ทรงปั้นหยาสีเหลืองมัสตาร์ดสุดคลาสสิก ถ่ายรูปสไตล์วินเทจสวยมาก มีคาเฟ่เก๋ๆ ให้นั่งชิลด้านใน</p>
+                        <a href="https://www.google.com/search?q=สถานีรถไฟกันตัง+ตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row bg-gray-50 rounded-2xl overflow-hidden tour-card reveal delay-100 shadow-sm border border-gray-100">
+                    <img src="https://ww2.trang.go.th/tmp/7e8eb030d52850f6cfd236ed1dd825db.jpg" alt="สวนพฤกษศาสตร์ทุ่งค่าย" class="sm:w-2/5 h-48 sm:h-auto object-cover">
+                    <div class="sm:w-3/5 p-6 flex flex-col justify-center">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">สวนพฤกษศาสตร์ทุ่งค่าย</h3>
+                        <p class="text-gray-600 text-sm mb-2">เดินศึกษาธรรมชาติบนสะพานเรือนยอดไม้ (Canopy Walkway) แห่งแรกของไทย สัมผัสป่าพรุและป่าดิบชื้นที่อุดมสมบูรณ์</p>
+                        <a href="https://www.google.com/search?q=สวนพฤกษศาสตร์ทุ่งค่าย+ตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Food Section -->
+    <section id="food" class="py-24 bg-trang-light/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <span class="text-trang font-semibold tracking-wider uppercase text-sm">Local Food</span>
+                <h2 class="text-4xl font-bold text-gray-900 mt-2 mb-4">ของหรอยเมืองตรัง</h2>
+                <p class="text-gray-600 text-lg">มาเมืองตรัง ถ้าไม่ได้กิน ถือว่ามาไม่ถึง!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Food 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden tour-card reveal shadow-sm">
+                    <img src="https://www.ryoiireview.com/upload/article/202410/1730372815_abd39cfbf4035485582c43035297410c.jpg" alt="หมูย่างเมืองตรัง" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">หมูย่างเมืองตรัง</h3>
+                        <p class="text-gray-600 text-sm mb-2">หนังกรอบ เนื้อนุ่ม รสชาติหวานนำกลมกล่อม ย่างด้วยเครื่องเทศสูตรเฉพาะ ทานคู่กับกาแฟยามเช้า</p>
+                        <a href="https://www.google.com/search?q=ร้านหมูย่างเมืองตรัง+แนะนำ" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ค้นหาร้านอร่อย <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Food 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden tour-card reveal delay-100 shadow-sm">
+                    <img src="https://trang.prd.go.th/th/file/get/file/20220608679072c312e48c9f6a0f22c4ab5b0d0a104618.jpg" alt="ติ่มซำยามเช้า" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">ติ่มซำยามเช้า</h3>
+                        <p class="text-gray-600 text-sm mb-2">นึ่งสดๆ ร้อนๆ เลือกได้จากหน้าตู้ มีร้านติ่มซำชื่อดังนับสิบร้านทั่วเมืองตรัง</p>
+                        <a href="https://www.google.com/search?q=ร้านติ่มซำ+เมืองตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ค้นหาร้านอร่อย <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Food 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden tour-card reveal delay-200 shadow-sm">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtKmzU-YsRUPGFBX-sFCEG8bMd6in3Shl5IA&s" alt="ซีฟู้ดรสจัดจ้าน" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">ซีฟู้ดรสจัดจ้าน</h3>
+                        <p class="text-gray-600 text-sm mb-2">อาหารทะเลสดจากเรือประมง นำมาทำเมนูอาหารใต้รสจัด เช่น แกงส้มปลากะพงยักษ์</p>
+                        <a href="https://www.google.com/search?q=ร้านอาหารทะเล+ตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group mt-2 text-sm">
+                            ค้นหาร้านอร่อย <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Cafe Section -->
+    <section id="cafe" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="w-full md:w-1/2 reveal">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">คาเฟ่น่านั่ง & สภากาแฟ</h2>
+                    <p class="text-gray-600 text-lg mb-6">
+                        วัฒนธรรมการดื่มกาแฟของชาวตรังฝังรากลึก เรามีทั้ง "สภากาแฟ" หรือร้านโกปี๊โบราณที่คนเฒ่าคนแก่มานั่งคุยข่าวสารยามเช้า ไปจนถึงคาเฟ่สมัยใหม่สไตล์มินิมอล หรือคาเฟ่ริมเลที่ตกแต่งอย่างสวยงามให้สายฮอปเปอร์ได้มาถ่ายรูป
+                    </p>
+                    <ul class="space-y-4 text-gray-700 mb-6">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-trang mr-3"></i> จิบโกปี๊ กินปาท่องโก๋ยามเช้า</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-trang mr-3"></i> ถ่ายรูปชิคๆ ที่คาเฟ่สไตล์ Sino-Portuguese</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-trang mr-3"></i> นั่งชิลดูพระอาทิตย์ตกที่คาเฟ่ริมหาดปากเมง</li>
+                    </ul>
+                    <a href="https://www.google.com/search?q=คาเฟ่สวยๆ+ตรัง" target="_blank" class="inline-flex items-center text-white bg-trang hover:bg-trang-dark px-6 py-2 rounded-full font-medium transition-colors group text-sm shadow-md">
+                        รวมพิกัดคาเฟ่ตรัง <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+                <div class="w-full md:w-1/2 grid grid-cols-2 gap-4 reveal delay-100">
+                    <img src="https://img.kapook.com/u/2017/supattra_wat/trang/t1.jpg" class="w-full h-48 md:h-64 object-cover rounded-xl shadow-md" alt="Cafe in Trang">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSag0RSwZwD9H9VqX7Z2JbOxV7d7ppj1UUU4A&s" class="w-full h-48 md:h-64 object-cover rounded-xl shadow-md mt-8" alt="Coffee Trang">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Culture Section -->
+    <section id="culture" class="relative py-24 bg-trang text-white">
+        <!-- Abstract Pattern Background -->
+        <div class="absolute inset-0 opacity-10">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M0 40L40 0H20L0 20M40 40V20L20 40" fill="currentColor"></path>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#pattern)"></rect>
+            </svg>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <span class="text-trang-light font-semibold tracking-wider uppercase text-sm">Festivals & Culture</span>
+                <h2 class="text-4xl font-bold mb-4 mt-2">ประเพณีระดับโลก</h2>
+                <p class="text-trang-light text-lg max-w-2xl mx-auto">สะท้อนถึงศรัทธาและวัฒนธรรมพื้นถิ่นที่สืบทอดกันมา</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 reveal hover:bg-white/20 transition-colors">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-trang text-2xl mb-6 shadow-lg">
+                        <i class="fa-solid fa-ring"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">พิธีวิวาห์ใต้สมุทร (กุมภาพันธ์)</h3>
+                    <p class="text-trang-light mb-4">
+                        จัดขึ้นช่วงวันวาเลนไทน์ คู่บ่าวสาวจะดำน้ำลงไปจดทะเบียนสมรสใต้ทะเลบริเวณเกาะกระดาน ถือเป็นงานที่ได้รับการบันทึกในกินเนสบุ๊ค
+                    </p>
+                    <a href="https://www.google.com/search?q=พิธีวิวาห์ใต้สมุทร+ตรัง" target="_blank" class="inline-flex items-center text-trang-accent font-medium hover:text-white transition-colors group mt-2 text-sm">
+                        ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 reveal delay-100 hover:bg-white/20 transition-colors">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-trang text-2xl mb-6 shadow-lg">
+                        <i class="fa-solid fa-vihara"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">เทศกาลกินเจ (กันยายน-ตุลาคม)</h3>
+                    <p class="text-trang-light mb-4">
+                        งานบุญสุดยิ่งใหญ่ มีขบวนแห่พระรอบเมือง (อิ้วเก้ง) ลุยไฟ และการประดับธงเหลืองทั่วเมือง เป็นศูนย์รวมความศรัทธาของชาวไทยเชื้อสายจีน
+                    </p>
+                    <a href="https://www.google.com/search?q=เทศกาลกินเจ+ตรัง" target="_blank" class="inline-flex items-center text-trang-accent font-medium hover:text-white transition-colors group mt-2 text-sm">
+                        ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Souvenir Section -->
+    <section id="souvenir" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">ของฝากน่าซื้อ</h2>
+                <p class="text-gray-600 text-lg">หิ้วความทรงจำและของอร่อยกลับบ้าน</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex items-center bg-white p-6 rounded-2xl shadow-sm reveal border border-gray-100">
+                    <div class="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 mr-6">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFlI4NdEnzWUywduKdbmCHT1GHG52npUSHwA&s" class="w-full h-full object-cover" alt="Cake">
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-900">เค้กเมืองตรัง</h4>
+                        <p class="text-gray-600 text-sm mt-1 mb-2">เอกลักษณ์คือเค้กมีรูตรงกลาง เนื้อนุ่ม ไม่ใส่สารกันบูด รสดั้งเดิม (รสไข่) รสใบเตย รสกาแฟ หอมอร่อย</p>
+                        <a href="https://www.google.com/search?q=ร้านเค้กเมืองตรัง+แนะนำ" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group text-sm">
+                            ค้นหาร้านของฝาก <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center bg-white p-6 rounded-2xl shadow-sm reveal delay-100 border border-gray-100">
+                    <div class="w-20 h-20 bg-trang-light text-trang rounded-full flex items-center justify-center flex-shrink-0 mr-6 text-3xl">
+                        <i class="fa-solid fa-shirt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-900">ผ้าทอนาหมื่นศรี</h4>
+                        <p class="text-gray-600 text-sm mt-1 mb-2">งานหัตถกรรมพื้นบ้านที่มีประวัติยาวนาน ลวดลายเป็นเอกลักษณ์ นิยมนำมาตัดเสื้อผ้าหรือทำของที่ระลึก</p>
+                        <a href="https://www.google.com/search?q=ผ้าทอนาหมื่นศรี+ตรัง" target="_blank" class="inline-flex items-center text-trang font-medium hover:text-trang-dark transition-colors group text-sm">
+                            ดูข้อมูลเพิ่มเติม <i class="fa-solid fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Transport Section -->
+    <section id="transport" class="py-24 bg-white border-t border-gray-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">การเดินทางมาตรัง</h2>
+                <p class="text-gray-600">เดินทางสะดวกสบาย เลือกได้หลายรูปแบบ</p>
+            </div>
+
+            <div class="space-y-6 reveal delay-100">
+                <div class="flex items-center p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <i class="fa-solid fa-plane text-4xl text-trang w-16 text-center"></i>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-lg text-gray-900">เครื่องบิน</h4>
+                        <p class="text-gray-600 text-sm">มีเที่ยวบินตรงจากกรุงเทพฯ (ดอนเมือง/สุวรรณภูมิ) สู่สนามบินตรังทุกวัน ใช้เวลาประมาณ 1 ชั่วโมง 20 นาที</p>
+                    </div>
+                </div>
+                <div class="flex items-center p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <i class="fa-solid fa-train text-4xl text-trang w-16 text-center"></i>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-lg text-gray-900">รถไฟ</h4>
+                        <p class="text-gray-600 text-sm">ออกจากสถานีหัวลำโพง/กรุงชีพอภิวัฒน์ สู่สถานีตรัง หรือสุดสายที่สถานีกันตัง (สายใต้อันดามัน)</p>
+                    </div>
+                </div>
+                <div class="flex items-center p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <i class="fa-solid fa-bus text-4xl text-trang w-16 text-center"></i>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-lg text-gray-900">รถทัวร์และรถยนต์ส่วนตัว</h4>
+                        <p class="text-gray-600 text-sm">รถทัวร์ออกจากสายใต้ใหม่ทุกวัน ใช้เวลาประมาณ 12 ชั่วโมง หรือขับรถยนต์ตามถนนเพชรเกษม (สาย 4)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12 border-t-4 border-trang">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-water text-trang text-3xl mr-2"></i>
+                        <span class="font-bold text-2xl text-white tracking-wide">TRANG<span class="text-trang">.</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+                        เว็บไซต์แนะนำการท่องเที่ยวจังหวัดตรัง รวบรวมข้อมูลครบจบในที่เดียว เพื่อให้การเดินทางของคุณสมบูรณ์แบบที่สุด
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">ติดต่อเรา</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fa-solid fa-envelope mr-2"></i> info@trangtravel.com</li>
+                        <li><i class="fa-solid fa-phone mr-2"></i> 075-XXX-XXX</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">ติดตามข่าวสาร</h4>
+                    <div class="flex space-x-4 mt-2">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-trang hover:text-white transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-trang hover:text-white transition-all"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-trang hover:text-white transition-all"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2026 Trang Travel Guide. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-trang text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 invisible transition-all duration-300 hover:bg-trang-dark hover:-translate-y-1 z-40">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            });
+
+            // 2. Navbar Scroll Effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-md', 'bg-white/95');
+                    navbar.classList.remove('bg-white/50');
+                } else {
+                    navbar.classList.remove('shadow-md');
+                }
+            });
+
+            // 3. Scroll Reveal Animation
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => {
+                revealOnScroll.observe(el);
+            });
+
+            // 4. Back to Top Button
+            const backToTopBtn = document.getElementById('backToTop');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    backToTopBtn.classList.remove('opacity-0', 'invisible');
+                    backToTopBtn.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopBtn.classList.add('opacity-0', 'invisible');
+                    backToTopBtn.classList.remove('opacity-100', 'visible');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // 5. Smooth Scroll for Anchor Links (offset for fixed navbar)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        e.preventDefault();
+                        const navbarHeight = 80; 
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
