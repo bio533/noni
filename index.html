@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เที่ยวตรัง - มนต์เสน่ห์แห่งอันดามัน | Trang Travel</title>
     
-    <!-- Google Fonts: Kanit -->
+    <!-- Google Fonts: Prompt (ฟอนต์กลมมน อ่านง่าย สบายตา และดูทันสมัย) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- เพิ่ม Google Fonts: Sriracha สำหรับหัวเว็บ (สไตล์ลายมือหวัดนิดๆ แต่ยังอ่านง่าย) -->
+    <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,7 +24,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Kanit', 'sans-serif'],
+                        sans: ['Prompt', 'sans-serif'], // ฟอนต์เนื้อหาหลัก
+                        cute: ['Sriracha', 'cursive'],  // ฟอนต์ลายมือสำหรับหัวเว็บ
                     },
                     colors: {
                         trang: {
@@ -39,12 +42,13 @@
 
     <style>
         body {
-            font-family: 'Kanit', sans-serif;
+            font-family: 'Prompt', sans-serif;
             background-color: #f8fafc;
         }
 
+        /* ปรับภาพปกให้เห็นภาพชัดขึ้น ลดสีฟ้าลง และใช้เงาสีดำไล่ระดับเพื่อดึงให้ตัวหนังสือเด่น */
         .hero-bg {
-            background-image: linear-gradient(rgba(2, 132, 199, 0.7), rgba(3, 105, 161, 0.85)), url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=2039&auto=format&fit=crop');
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.65) 100%), url('https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -78,9 +82,18 @@
         }
         .floating { animation: float 3s ease-in-out infinite; }
 
-        /* Custom text highlight glow */
+        /* Custom text highlight glow - เพิ่มเงาดำด้านหลังให้เข้มขึ้นเพื่อให้ข้อความไม่โดนกลืนกับความสว่างภาพ */
         .text-glow {
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+            text-shadow: 2px 4px 6px rgba(0,0,0,0.8), 0 0 25px rgba(56, 189, 248, 0.9), 0 0 45px rgba(56, 189, 248, 0.7);
+        }
+
+        /* Animation สำหรับปุ่มให้ดูน่ากด */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.9); }
+        }
+        .btn-glow {
+            animation: pulse-glow 2s infinite;
         }
         
         /* Hide scrollbar for nav but keep functionality */
@@ -105,7 +118,7 @@
                     <span class="font-bold text-2xl text-trang-dark tracking-wide">TRANG<span class="text-trang-accent">.</span></span>
                 </div>
                 
-                <!-- Desktop Menu (Scrollable if too long on smaller screens) -->
+                <!-- Desktop Menu -->
                 <div class="hidden xl:flex space-x-6 items-center nav-scroller overflow-x-auto whitespace-nowrap">
                     <a href="#about" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">ข้อมูลทั่วไป</a>
                     <a href="#islands" class="text-gray-600 hover:text-trang font-medium transition-colors text-sm">เกาะและทะเล</a>
@@ -142,28 +155,29 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative h-screen hero-bg flex items-center justify-center text-center px-4" id="home">
-        <div class="z-10 text-white max-w-4xl mx-auto reveal">
-            <h2 class="text-trang-accent font-medium text-xl md:text-2xl mb-4 tracking-widest uppercase drop-shadow-md">ยุทธจักรความอร่อย เสน่ห์อันดามัน</h2>
+    <!-- ปรับจาก h-screen เป็น min-h-screen และเพิ่ม padding (pt-28 pb-16) เพื่อป้องกันเนื้อหาทับกันบนจอมือถือ -->
+    <header class="relative min-h-screen pt-28 pb-16 hero-bg flex items-center justify-center text-center px-4" id="home">
+        <div class="z-10 text-white max-w-4xl mx-auto reveal mt-8">
+            <h2 class="font-cute text-trang-light text-2xl md:text-3xl mb-4 tracking-widest drop-shadow-md">ยุทธจักรความอร่อย เสน่ห์อันดามัน</h2>
             
-            <!-- ปรับแต่งส่วนที่ไฮไลต์ตามที่ผู้ใช้ต้องการ -->
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
-                <span class="text-white">ค้นพบความมหัศจรรย์</span><br>
-                <span class="text-white">ที่</span> 
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-trang-accent to-blue-200 text-glow">จังหวัดตรัง</span>
+            <!-- ปรับขนาดตามจอ (text-5xl ถึง 8xl) เพิ่มระยะบรรทัด (leading-[1.6]) และใส่ padding ป้องกันการตัดวรรณยุกต์ -->
+            <h1 class="font-cute text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-8 text-white text-glow py-4 leading-[1.6]">
+                <span class="block pb-1 md:pb-3">ค้นพบความมหัศจรรย์</span>
+                <span class="block pt-1 md:pt-3">ที่จังหวัดตรัง</span>
             </h1>
             
-            <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light drop-shadow-md">
-                สัมผัสธรรมชาติที่สมบูรณ์ ชายหาดเงียบสงบ เกาะสวยน้ำใส และลิ้มรสอาหารพื้นเมืองที่เป็นเอกลักษณ์ ไม่ว่าจะเป็นหมูย่างหรือติ่มซำยามเช้า
+            <!-- ปรับให้พื้นหลังข้อความทึบ/เบลอขึ้นเล็กน้อย (bg-black/30 backdrop-blur-md) เพื่อเพิ่มความชัดเจนเมื่ออ่านบนภาพที่สว่าง -->
+            <p class="text-base sm:text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light drop-shadow-md backdrop-blur-md bg-black/30 p-5 rounded-2xl border border-white/10">
+                ออกเดินทางไปสัมผัสสวรรค์แห่งท้องทะเลใต้ ดื่มด่ำกับหาดทรายขาว ถ้ำมรกตสุดอันซีน และตะลุยยุทธจักรของอร่อยเมืองตรังที่จะทำให้คุณหลงรักจนไม่อยากกลับ!
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#about" class="bg-gradient-to-r from-trang-accent to-trang text-white px-8 py-4 rounded-full font-bold text-lg hover:from-trang hover:to-trang-dark transition-all transform hover:-translate-y-1 shadow-lg shadow-blue-500/50 floating border border-white/20">
-                    เริ่มสำรวจเลย
+                <a href="#about" class="bg-trang-light/95 backdrop-blur-sm text-trang-dark px-10 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-trang transition-all transform hover:-translate-y-1 btn-glow floating border border-white/60 shadow-lg">
+                    ไปกันต่อ
                 </a>
             </div>
         </div>
         
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer z-30" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
             <i class="fa-solid fa-chevron-down text-white text-3xl opacity-80 hover:opacity-100 transition-opacity drop-shadow-md"></i>
         </div>
     </header>
@@ -176,7 +190,7 @@
                     <div class="relative rounded-2xl overflow-hidden shadow-2xl">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b6/LaoLiangPhi.jpg" alt="วิถีชีวิตชาวตรัง" class="w-full h-[500px] object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-trang-dark/80 to-transparent flex items-end p-8">
-                            <h3 class="text-white text-2xl font-bold">"เมืองพระยารัษฎา ชาวประชาใจกว้าง..."</h3>
+                            <h3 class="text-white text-2xl font-bold drop-shadow-md">"เมืองพระยารัษฎา ชาวประชาใจกว้าง..."</h3>
                         </div>
                     </div>
                 </div>
@@ -535,40 +549,41 @@
                 </div>
                 
                 <div>
-    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">เวลาทำการ</h4>
-    <ul class="text-gray-400 text-sm space-y-2">
-        <li class="flex justify-between border-b border-gray-800 pb-2">
-            <span>จันทร์ - ศุกร์:</span>
-            <span class="text-white">09:00 - 18:00 น.</span>
-        </li>
-        <li class="flex justify-between border-b border-gray-800 pb-2 pt-1">
-            <span>เสาร์:</span>
-            <span class="text-white">10:00 - 15:00 น.</span>
-        </li>
-        <li class="flex justify-between pt-1">
-            <span>อาทิตย์:</span>
-            <span class="text-red-400">ปิดทำการ</span>
-        </li>
-    </ul>
-</div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">เวลาทำการ</h4>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>จันทร์ - ศุกร์:</span>
+                            <span class="text-white">09:00 - 18:00 น.</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2 pt-1">
+                            <span>เสาร์:</span>
+                            <span class="text-white">10:00 - 15:00 น.</span>
+                        </li>
+                        <li class="flex justify-between pt-1">
+                            <span>อาทิตย์:</span>
+                            <span class="text-red-400">ปิดทำการ</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-                <p>&copy; </p>
+            <!-- ปรับ Layout ตรงนี้ให้เป็น flex-col items-center และเพิ่มระยะห่าง gap-6 เพื่อให้อยู่ตรงกลาง -->
+            <div class="border-t border-gray-800 pt-8 flex flex-col items-center justify-center gap-5 text-sm text-gray-500">
                 
                 <!-- ส่วนแสดงจำนวนผู้เข้าชมเว็บไซต์ -->
-                <div class="mt-4 md:mt-0 flex items-center gap-3 bg-gray-800/50 px-4 py-2 rounded-xl border border-gray-700">
-                    <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-trang-accent shadow-inner">
+                <div class="flex items-center gap-4 bg-gray-800/50 px-6 py-3 rounded-2xl border border-gray-700 shadow-lg">
+                    <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-trang-accent shadow-inner border border-gray-700">
                         <i class="fa-solid fa-chart-simple"></i>
                     </div>
                     <div>
                         <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">ผู้เข้าชมทั้งหมด</p>
-                        <div class="font-mono text-lg font-bold text-white tracking-widest" id="visitor-count">
+                        <div class="font-mono text-xl font-bold text-white tracking-widest" id="visitor-count">
                             000,000
                         </div>
                     </div>
                 </div>
+
+                <p>&copy; 2026 Trang Travel Guide</p>
             </div>
         </div>
     </footer>
