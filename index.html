@@ -554,8 +554,21 @@
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-                <p>&copy;</p>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; </p>
+                
+                <!-- ส่วนแสดงจำนวนผู้เข้าชมเว็บไซต์ -->
+                <div class="mt-4 md:mt-0 flex items-center gap-3 bg-gray-800/50 px-4 py-2 rounded-xl border border-gray-700">
+                    <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-trang-accent shadow-inner">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">ผู้เข้าชมทั้งหมด</p>
+                        <div class="font-mono text-lg font-bold text-white tracking-widest" id="visitor-count">
+                            000,000
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -650,6 +663,25 @@
                     }
                 });
             });
+
+            // 6. Visitor Counter (Simulated)
+            const visitorDisplay = document.getElementById('visitor-count');
+            if (visitorDisplay) {
+                // ดึงค่าจาก LocalStorage หรือตั้งค่าเริ่มต้น (สมมติว่ามีคนเข้าชมแล้ว 1,000 คน)
+                let count = localStorage.getItem('trang_visitor_count');
+                
+                if (!count) {
+                    count = 1000; // ตัวเลขเริ่มต้น
+                } else {
+                    count = parseInt(count) + 1; // เพิ่มทีละ 1 เมื่อมีการรีเฟรชหน้าเว็บ
+                }
+                
+                localStorage.setItem('trang_visitor_count', count);
+                
+                // จัดรูปแบบตัวเลขให้มีลูกน้ำ (Comma) และความยาว 6 หลัก
+                const formattedCount = count.toString().padStart(6, '0').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                visitorDisplay.innerText = formattedCount;
+            }
         });
     </script>
 </body>
